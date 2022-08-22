@@ -13,6 +13,7 @@ router.use((req, res, next) => {
   next();
 });
 router.post('/sauces', auth, multer, saucesCtrl.createSauce);
+router.get('/sauces', saucesCtrl.getAllSauces);
 
 
 module.exports = router;
