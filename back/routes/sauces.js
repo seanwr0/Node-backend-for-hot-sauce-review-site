@@ -15,5 +15,5 @@ router.use((req, res, next) => {
 router.post('/sauces', auth, multer, saucesCtrl.createSauce);
 router.get('/sauces', saucesCtrl.getAllSauces);
 router.get('/sauces/:id', saucesCtrl.getOneSauce);
-
+router.delete('/sauces/:id', auth, saucesCtrl.deleteSauce);
 module.exports = router;
