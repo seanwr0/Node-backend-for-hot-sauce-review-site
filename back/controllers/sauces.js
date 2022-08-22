@@ -1,6 +1,6 @@
 const sauces = require('../models/sauces');
 
-
+// creates a sauce object and saves it to the data-base
 exports.createSauce = (req, res, next) => {
     req.body.sauce = JSON.parse(req.body.sauce);
     const url = req.protocol + '://' + req.get('host');
@@ -29,7 +29,7 @@ exports.createSauce = (req, res, next) => {
     );
   };
 
-
+// retrieves all sauces from data-base and returns them as an array
   exports.getAllSauces = (req, res, next) => {
     sauces.find().then(
       (sauces) => {
@@ -38,6 +38,22 @@ exports.createSauce = (req, res, next) => {
     ).catch(
       (error) => {
         res.status(400).json({
+          error: error
+        });
+      }
+    );
+  };
+// gets one item from the data-base by matching it against an id
+  exports.getOneSauce = (req, res, next) => {
+    sauces.findOne({
+      _id: req.params.id
+    }).then(
+      (sauce) => {
+        res.status(200).json(sauce);
+      }
+    ).catch(
+      (error) => {
+        res.status(404).json({
           error: error
         });
       }

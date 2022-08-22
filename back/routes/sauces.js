@@ -14,6 +14,6 @@ router.use((req, res, next) => {
 });
 router.post('/sauces', auth, multer, saucesCtrl.createSauce);
 router.get('/sauces', saucesCtrl.getAllSauces);
-
+router.get('/sauces/:id', saucesCtrl.getOneSauce);
 
 module.exports = router;
