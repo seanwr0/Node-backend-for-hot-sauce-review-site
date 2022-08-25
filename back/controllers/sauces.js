@@ -1,6 +1,7 @@
 const sauces = require('../models/sauces');
 const fs = require('fs');
 
+
 // creates a sauce object and saves it to the data-base
 exports.createSauce = (req, res, next) => {
   req.body.sauce = JSON.parse(req.body.sauce);
@@ -92,6 +93,8 @@ exports.deleteSauce = (req, res, next) => {
   );
 };
 
+// checks whether user has liked or disliked the product before, and updates the like or dislike number,
+//  and adds or removes user Id from the like or dislike list accordingly
 exports.setLike = (req, res, next) => {
   let likeState = req.body.like;
   let likeUpdate = 0;
@@ -123,15 +126,15 @@ exports.setLike = (req, res, next) => {
             dislikeIdUpdate.splice(dislikeIndex, 1);
           }
         } else {
-            if (likeState == 1) {
-              likeUpdate += 1;
-              likeIdUpdate.push(req.body.userId);
-              console.log(likeUpdate);
-            }
-            if (likeState == -1) {
-              dislikeUpdate += 1;
-              dislikeIdUpdate.push(req.body.userId);
-            }
+          if (likeState == 1) {
+            likeUpdate += 1;
+            likeIdUpdate.push(req.body.userId);
+            console.log(likeUpdate);
+          }
+          if (likeState == -1) {
+            dislikeUpdate += 1;
+            dislikeIdUpdate.push(req.body.userId);
+          }
         }
       }
       sauceUpdate = ({
@@ -140,11 +143,12 @@ exports.setLike = (req, res, next) => {
         usersLiked: likeIdUpdate,
         usersDisliked: dislikeIdUpdate,
       });
+
       sauces.updateOne({
         _id: req.params.id
       }, sauceUpdate).then(
         function () {
-          console.log(likeUpdate);
+          console.log(req.params.id);
           res.status(201).json({
             message: 'Like made successfully!'
           });
@@ -158,4 +162,52 @@ exports.setLike = (req, res, next) => {
       );
     }
   )
+};
+
+
+
+exports.updateSauce = (req, res, next) => {
+
+  let sauceUpdate =new sauces;
+  if (req.file) {
+    req.body.sauce = JSON.parse(req.body.sauce);
+    const url = req.protocol + '://' + req.get('host');
+     sauceUpdate = ({
+      userId: req.body.sauce.userId,
+      name: req.body.sauce.name,
+      manufacturer: req.body.sauce.manufacturer,
+      description: req.body.sauce.description,
+      mainPepper: req.body.sauce.mainPepper,
+      imageUrl: url + '/images/' + req.file.filename,
+      heat: req.body.sauce.heat,
+    })
+  } else {
+
+    sauceUpdate = ({
+      _id: req.params.id,
+      userId: req.body.userId,
+      name: req.body.name,
+      manufacturer: req.body.manufacturer,
+      description: req.body.description,
+      mainPepper: req.body.mainPepper,
+      heat: req.body.heat,
+    });
+  }
+
+  sauces.updateOne({
+    _id: req.params.id
+  }, sauceUpdate).then(
+    () => {
+
+      res.status(201).json({
+        message: 'Like made successfully!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error
+      });
+    }
+  );
 };

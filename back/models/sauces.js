@@ -23,7 +23,7 @@ const saucesSchema = mongoose.Schema({
   },
   imageUrl: {
     type: String,
-    required: true
+    
   },
   heat: {
     type: Number,
