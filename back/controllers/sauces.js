@@ -164,10 +164,9 @@ exports.setLike = (req, res, next) => {
   )
 };
 
-
-
+// function updates the sauce, first checks if there is an image file, if there is an image, 
+// delete the old image and update sauce, 
 exports.updateSauce = (req, res, next) => {
-
   let sauceUpdate =new sauces;
   if (req.file) {
     req.body.sauce = JSON.parse(req.body.sauce);
@@ -182,7 +181,6 @@ exports.updateSauce = (req, res, next) => {
       heat: req.body.sauce.heat,
     })
   } else {
-
     sauceUpdate = ({
       _id: req.params.id,
       userId: req.body.userId,
@@ -193,7 +191,6 @@ exports.updateSauce = (req, res, next) => {
       heat: req.body.heat,
     });
   }
-
   sauces.updateOne({
     _id: req.params.id
   }, sauceUpdate).then(
