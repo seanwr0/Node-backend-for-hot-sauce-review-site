@@ -1,7 +1,6 @@
 const sauces = require('../models/sauces');
 const fs = require('fs');
 
-
 // creates a sauce object and saves it to the data-base
 exports.createSauce = (req, res, next) => {
   req.body.sauce = JSON.parse(req.body.sauce);
@@ -49,6 +48,7 @@ exports.getAllSauces = (req, res, next) => {
     }
   );
 };
+
 // gets one item from the data-base by matching it against an id
 exports.getOneSauce = (req, res, next) => {
   sauces.findOne({
@@ -66,6 +66,7 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 
+// deletes a specified sauce from the data base, and the image file from the images folder
 exports.deleteSauce = (req, res, next) => {
   sauces.findOne({
     _id: req.params.id
@@ -94,7 +95,7 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 // checks whether user has liked or disliked the product before, and updates the like or dislike number,
-//  and adds or removes user Id from the like or dislike list accordingly
+// and adds or removes user Id from the like or dislike list accordingly
 exports.setLike = (req, res, next) => {
   let likeState = req.body.like;
   let likeUpdate = 0;
@@ -165,12 +166,21 @@ exports.setLike = (req, res, next) => {
 };
 
 // function updates the sauce, first checks if there is an image file, if there is an image, 
-// delete the old image and update sauce, 
+// deletes the old image and updates sauce, 
 exports.updateSauce = (req, res, next) => {
   let sauceUpdate =new sauces;
   if (req.file) {
     req.body.sauce = JSON.parse(req.body.sauce);
     const url = req.protocol + '://' + req.get('host');
+    sauces.findOne({
+      _id: req.params.id
+    }).then(
+      (sauce) => {
+        const filename = sauce.imageUrl.split('/images/')[1];
+        fs.unlink('images/' + filename, () => {
+        });
+      }
+    );
      sauceUpdate = ({
       userId: req.body.sauce.userId,
       name: req.body.sauce.name,
@@ -180,6 +190,7 @@ exports.updateSauce = (req, res, next) => {
       imageUrl: url + '/images/' + req.file.filename,
       heat: req.body.sauce.heat,
     })
+
   } else {
     sauceUpdate = ({
       _id: req.params.id,
@@ -197,7 +208,7 @@ exports.updateSauce = (req, res, next) => {
     () => {
 
       res.status(201).json({
-        message: 'Like made successfully!'
+        message: 'Update made successfully!'
       });
     }
   ).catch(
@@ -208,3 +219,7 @@ exports.updateSauce = (req, res, next) => {
     }
   );
 };
+
+
+
+

@@ -2,6 +2,7 @@ const users = require('../models/users');
 const bcrypt= require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+// saves email and password to data base, checks if email is unique, hashes the password
 exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then(
     (hash) => {
@@ -25,6 +26,7 @@ exports.createUser = (req, res, next) => {
     })
 };
 
+// checks if user exists, and if the passwords match, returns a token
 exports.checkUser = (req, res, next) => {
   users.findOne({ email: req.body.email }).then(
     (user) => {

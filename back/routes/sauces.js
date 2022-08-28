@@ -13,9 +13,9 @@ router.use((req, res, next) => {
   next();
 });
 router.post('/sauces', auth, multer, saucesCtrl.createSauce);
-router.get('/sauces', saucesCtrl.getAllSauces);
-router.get('/sauces/:id', saucesCtrl.getOneSauce);
+router.get('/sauces',  saucesCtrl.getAllSauces);
+router.get('/sauces/:id',  saucesCtrl.getOneSauce);
 router.delete('/sauces/:id', auth, saucesCtrl.deleteSauce);
-router.post('/sauces/:id/like', saucesCtrl.setLike);
+router.post('/sauces/:id/like',  auth,saucesCtrl.setLike);
 router.put('/sauces/:id', auth, multer, saucesCtrl.updateSauce);
 module.exports = router;
