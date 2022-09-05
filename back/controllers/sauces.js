@@ -117,6 +117,7 @@ exports.setLike = (req, res, next) => {
         let likeIndex = sauce.usersLiked.indexOf(req.body.userId);
         if (likeState == 0 || likeState == -1) {
           likeUpdate -= 1;
+          
           likeIdUpdate.splice(likeIndex, 1);
         }
       } else {
@@ -130,7 +131,6 @@ exports.setLike = (req, res, next) => {
           if (likeState == 1) {
             likeUpdate += 1;
             likeIdUpdate.push(req.body.userId);
-            console.log(likeUpdate);
           }
           if (likeState == -1) {
             dislikeUpdate += 1;
@@ -149,7 +149,6 @@ exports.setLike = (req, res, next) => {
         _id: req.params.id
       }, sauceUpdate).then(
         function () {
-          console.log(req.params.id);
           res.status(201).json({
             message: 'Like made successfully!'
           });
